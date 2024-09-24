@@ -1,0 +1,46 @@
+# Define stages
+stages:
+  - build
+  - test
+  - package
+
+# Cache Maven dependencies to speed up builds
+cache:
+  paths:
+    - .m2/repository
+
+# Build Stage: Compile the Java code
+build:
+  stage: build
+  script:
+    - echo "Building the Spring Boot project..."
+    - mvn clean compile
+  only:
+    - branches
+  tags:
+    - java
+
+# Test Stage: Run unit tests
+test:
+  stage: test
+  script:
+    - echo "Running unit tests..."
+    - mvn test
+  only:
+    - branches
+  tags:
+    - java
+
+# Package Stage: Package the application into a JAR
+package:
+  stage: package
+  script:
+    - echo "Packaging the Spring Boot application..."
+    - mvn package
+  artifacts:
+    paths:
+      - target/*.jar
+  only:
+    - master
+  tags:
+    - java
